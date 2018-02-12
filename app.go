@@ -29,13 +29,21 @@ func (a *App) InitializeApplication(user, password, url, dbname string) {
 //InitializeRoutes - Declare all application routes
 func (a *App) InitializeRoutes() {
 
-	//model.Team struct
+	//model.Region struct
 	a.Router.HandleFunc("/api/aws/region", ctrl.CreateRegion).Methods("POST")
 	a.Router.HandleFunc("/api/aws/regions", ctrl.GetRegions).Methods("GET")
 	a.Router.HandleFunc("/api/aws/region/{id:[0-9]+}", ctrl.GetRegion).Methods("GET")
 	a.Router.HandleFunc("/api/aws/region/{name}", ctrl.GetRegionByName).Methods("GET")
 	a.Router.HandleFunc("/api/aws/region/{id:[0-9]+}", ctrl.UpdateRegion).Methods("PUT")
 	a.Router.HandleFunc("/api/aws/region/{id:[0-9]+}", ctrl.DeleteRegion).Methods("DELETE")
+
+	//model.InstanceType struct
+	a.Router.HandleFunc("/api/aws/instance/type", ctrl.CreateInstanceType).Methods("POST")
+	a.Router.HandleFunc("/api/aws/instance/types", ctrl.GetInstanceTypes).Methods("GET")
+	a.Router.HandleFunc("/api/aws/instance/type/{id:[0-9]+}", ctrl.GetInstanceType).Methods("GET")
+	a.Router.HandleFunc("/api/aws/instance/type/{name}", ctrl.GetInstanceTypeByName).Methods("GET")
+	a.Router.HandleFunc("/api/aws/instance/type/{id:[0-9]+}", ctrl.UpdateInstanceType).Methods("PUT")
+	a.Router.HandleFunc("/api/aws/instance/type/{id:[0-9]+}", ctrl.DeleteInstanceType).Methods("DELETE")
 
 }
 
