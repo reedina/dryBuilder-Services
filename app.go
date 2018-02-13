@@ -45,6 +45,14 @@ func (a *App) InitializeRoutes() {
 	a.Router.HandleFunc("/api/aws/instance/type/{id:[0-9]+}", ctrl.UpdateInstanceType).Methods("PUT")
 	a.Router.HandleFunc("/api/aws/instance/type/{id:[0-9]+}", ctrl.DeleteInstanceType).Methods("DELETE")
 
+	//model.Auth struct
+	a.Router.HandleFunc("/api/aws/auth", ctrl.CreateAuth).Methods("POST")
+	a.Router.HandleFunc("/api/aws/auths", ctrl.GetAuths).Methods("GET")
+	a.Router.HandleFunc("/api/aws/auth/{id:[0-9]+}", ctrl.GetAuth).Methods("GET")
+	a.Router.HandleFunc("/api/aws/auth/{name}", ctrl.GetAuthByName).Methods("GET")
+	a.Router.HandleFunc("/api/aws/auth/{id:[0-9]+}", ctrl.UpdateAuth).Methods("PUT")
+	a.Router.HandleFunc("/api/aws/auth/{id:[0-9]+}", ctrl.DeleteAuth).Methods("DELETE")
+
 }
 
 //RunApplication - Start the HTTP server
