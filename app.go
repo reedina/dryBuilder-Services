@@ -59,7 +59,7 @@ func (a *App) InitializeRoutes() {
 	a.Router.HandleFunc("/api/packer/builder/type/{id:[0-9]+}", ctrl.GetPackerBuilderType).Methods("GET")
 	a.Router.HandleFunc("/api/packer/builder/type/{name}", ctrl.GetPackerBuilderTypeByName).Methods("GET")
 	a.Router.HandleFunc("/api/packer/builder/type/{id:[0-9]+}", ctrl.UpdatePackerBuilderType).Methods("PUT")
-	a.Router.HandleFunc("/api/packer/buiilder/type/{id:[0-9]+}", ctrl.DeletePackerBuilderType).Methods("DELETE")
+	a.Router.HandleFunc("/api/packer/builder/type/{id:[0-9]+}", ctrl.DeletePackerBuilderType).Methods("DELETE")
 }
 
 //RunApplication - Start the HTTP server
