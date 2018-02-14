@@ -60,6 +60,14 @@ func (a *App) InitializeRoutes() {
 	a.Router.HandleFunc("/api/packer/builder/type/{name}", ctrl.GetPackerBuilderTypeByName).Methods("GET")
 	a.Router.HandleFunc("/api/packer/builder/type/{id:[0-9]+}", ctrl.UpdatePackerBuilderType).Methods("PUT")
 	a.Router.HandleFunc("/api/packer/builder/type/{id:[0-9]+}", ctrl.DeletePackerBuilderType).Methods("DELETE")
+
+	//model.AmiFilterLinux struct
+	a.Router.HandleFunc("/api/packer/ami/filter/linux", ctrl.CreateAmiFilterLinux).Methods("POST")
+	a.Router.HandleFunc("/api/packer/ami/filter/linuxes", ctrl.GetAmiFilterLinuxes).Methods("GET")
+	a.Router.HandleFunc("/api/packer/ami/filter/linux/{id:[0-9]+}", ctrl.GetAmiFilterLinux).Methods("GET")
+	a.Router.HandleFunc("/api/packer/ami/filter/linux/{name}", ctrl.GetAmiFilterLinuxByName).Methods("GET")
+	a.Router.HandleFunc("/api/packer/ami/filter/linux/{id:[0-9]+}", ctrl.UpdateAmiFilterLinux).Methods("PUT")
+	a.Router.HandleFunc("/api/packer/ami/filter/linux/{id:[0-9]+}", ctrl.DeleteAmiFilterLinux).Methods("DELETE")
 }
 
 //RunApplication - Start the HTTP server
