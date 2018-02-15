@@ -13,7 +13,7 @@ type AmiFilterLinux struct {
 	SSHUsername        string `json:"ssh_username"`
 	VirtualizationType string `json:"virtualization_type"`
 	Name               string `json:"name"`
-	RootDeviceType     string `json:"root-device-type"`
+	RootDeviceType     string `json:"root_device_type"`
 	MostRecent         string `json:"most_recent"`
 	Owners             string `json:"owners"`
 }
@@ -130,12 +130,12 @@ func GetAmiFilterLinuxByName(filterLinux *AmiFilterLinux) error {
 
 //UpdateAmiFilterLinux (PUT)
 func UpdateAmiFilterLinux(filterLinux *AmiFilterLinux) error {
-	_, err :=
-		db.Exec("UPDATE ami_filter_linux SET builder_types_id=?, friendly_name=?, description=?, "+
-			"ssh_username=?, virtualization_type=?, name=?, root_device_type=?, most_recent=?, owners=? WHERE id=?",
-			filterLinux.BuilderTypesID, filterLinux.FriendlyName, filterLinux.Description, filterLinux.SSHUsername,
-			filterLinux.VirtualizationType, filterLinux.Name, filterLinux.RootDeviceType, filterLinux.MostRecent,
-			filterLinux.Owners, filterLinux.ID)
+
+	_, err := db.Exec("UPDATE ami_filter_linux SET builder_types_id=?, friendly_name=?, description=?, "+
+		"ssh_username=?, virtualization_type=?, name=?, root_device_type=?, most_recent=?, owners=? WHERE id=?",
+		filterLinux.BuilderTypesID, filterLinux.FriendlyName, filterLinux.Description, filterLinux.SSHUsername,
+		filterLinux.VirtualizationType, filterLinux.Name, filterLinux.RootDeviceType, filterLinux.MostRecent,
+		filterLinux.Owners, filterLinux.ID)
 
 	return err
 }
