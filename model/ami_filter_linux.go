@@ -13,7 +13,7 @@ type AmiFilterLinux struct {
 	SSHUsername        string `json:"ssh_username"`
 	VirtualizationType string `json:"virtualization_type"`
 	Name               string `json:"name"`
-	RootDeviceType     string `json:"root_device_type"`
+	RootDeviceType     string `json:"root-device-type"`
 	MostRecent         bool   `json:"most_recent"`
 	Owners             string `json:"owners"`
 }
