@@ -8,8 +8,6 @@ import (
 type AmiFilterLinux struct {
 	ID                 int    `json:"id"`
 	BuilderTypesID     int    `json:"builder_types_id"`
-	FriendlyName       string `json:"friendly_name"`
-	Description        string `json:"description"`
 	SSHUsername        string `json:"ssh_username"`
 	VirtualizationType string `json:"virtualization_type"`
 	Name               string `json:"name"`
@@ -26,8 +24,8 @@ type AmiFilterLinuxes struct {
 //DoesAmiFilterLinuxResourceExist (POST)
 func DoesAmiFilterLinuxResourceExist(filterLinux *AmiFilterLinux) bool {
 
-	err := db.QueryRow("SELECT id, friendly_name FROM ami_filter_linux WHERE friendly_name=?", filterLinux.FriendlyName).
-		Scan(&filterLinux.ID, &filterLinux.FriendlyName)
+	err := db.QueryRow("SELECT id, name FROM ami_filter_linux WHERE name=?", filterLinux.Name).
+		Scan(&filterLinux.ID, &filterLinux.Name)
 
 	if err == sql.ErrNoRows {
 		return false
@@ -50,10 +48,10 @@ func DoesAmiFilterLinuxIDExist(ID int) bool {
 }
 
 //DoesAmiFilterLinuxExistForAnotherID (PUT)
-func DoesAmiFilterLinuxExistForAnotherID(friendlName string, id int) bool {
+func DoesAmiFilterLinuxExistForAnotherID(name string, id int) bool {
 
 	var dbID int
-	err := db.QueryRow("SELECT id FROM ami_filter_linux WHERE friendly_name=?", friendlName).Scan(&dbID)
+	err := db.QueryRow("SELECT id FROM ami_filter_linux WHERE name=?", name).Scan(&dbID)
 
 	if err == sql.ErrNoRows {
 		return false
@@ -69,9 +67,9 @@ func DoesAmiFilterLinuxExistForAnotherID(friendlName string, id int) bool {
 //CreateAmiFilterLinux (POST)
 func CreateAmiFilterLinux(filterLinux *AmiFilterLinux) error {
 
-	res, err := db.Exec("INSERT INTO ami_filter_linux(builder_types_id, friendly_name, description, ssh_username,"+
-		"virtualization_type, name, root_device_type, most_recent, owners) VALUES(?,?,?,?,?,?,?,?,?)",
-		filterLinux.BuilderTypesID, filterLinux.FriendlyName, filterLinux.Description, filterLinux.SSHUsername,
+	res, err := db.Exec("INSERT INTO ami_filter_linux(builder_types_id, ssh_username,"+
+		"virtualization_type, name, root_device_type, most_recent, owners) VALUES(?,?,?,?,?,?,?)",
+		filterLinux.BuilderTypesID, filterLinux.SSHUsername,
 		filterLinux.VirtualizationType, filterLinux.Name, filterLinux.RootDeviceType, filterLinux.MostRecent, filterLinux.Owners)
 
 	if err != nil {
@@ -86,7 +84,7 @@ func CreateAmiFilterLinux(filterLinux *AmiFilterLinux) error {
 
 //GetAmiFilterLinuxes (GET)
 func GetAmiFilterLinuxes() ([]AmiFilterLinux, error) {
-	rows, err := db.Query("SELECT id, builder_types_id, friendly_name, description, ssh_username, virtualization_type" +
+	rows, err := db.Query("SELECT id, builder_types_id, ssh_username, virtualization_type" +
 		",name, root_device_type, most_recent, owners FROM ami_filter_linux")
 
 	if err != nil {
@@ -99,7 +97,7 @@ func GetAmiFilterLinuxes() ([]AmiFilterLinux, error) {
 		defer rows.Close()
 
 		var r AmiFilterLinux
-		if err := rows.Scan(&r.ID, &r.BuilderTypesID, &r.FriendlyName, &r.Description, &r.SSHUsername,
+		if err := rows.Scan(&r.ID, &r.BuilderTypesID, &r.SSHUsername,
 			&r.VirtualizationType, &r.Name, &r.RootDeviceType, &r.MostRecent, &r.Owners); err != nil {
 			return nil, err
 		}
@@ -111,9 +109,9 @@ func GetAmiFilterLinuxes() ([]AmiFilterLinux, error) {
 
 //GetAmiFilterLinux (GET)
 func GetAmiFilterLinux(filterLinux *AmiFilterLinux) error {
-	return db.QueryRow("SELECT builder_types_id, friendly_name, description, ssh_username, virtualization_type"+
+	return db.QueryRow("SELECT builder_types_id, ssh_username, virtualization_type"+
 		",name, root_device_type, most_recent, owners FROM ami_filter_linux WHERE id=?", filterLinux.ID).
-		Scan(&filterLinux.BuilderTypesID, &filterLinux.FriendlyName, &filterLinux.Description, &filterLinux.SSHUsername,
+		Scan(&filterLinux.BuilderTypesID, &filterLinux.SSHUsername,
 			&filterLinux.VirtualizationType, &filterLinux.Name, &filterLinux.RootDeviceType, &filterLinux.MostRecent,
 			&filterLinux.Owners)
 
@@ -121,19 +119,19 @@ func GetAmiFilterLinux(filterLinux *AmiFilterLinux) error {
 
 //GetAmiFilterLinuxByName (GET)
 func GetAmiFilterLinuxByName(filterLinux *AmiFilterLinux) error {
-	return db.QueryRow("SELECT id, builder_types_id, friendly_name, description, ssh_username, virtualization_type"+
-		",name, root_device_type, most_recent, owners from ami_filter_linux where friendly_name=?",
-		filterLinux.FriendlyName).Scan(&filterLinux.ID, &filterLinux.BuilderTypesID, &filterLinux.FriendlyName,
-		&filterLinux.Description, &filterLinux.SSHUsername, &filterLinux.VirtualizationType, &filterLinux.Name, &filterLinux.RootDeviceType,
+	return db.QueryRow("SELECT id, builder_types_id, ssh_username, virtualization_type"+
+		",name, root_device_type, most_recent, owners from ami_filter_linux where name=?",
+		filterLinux.Name).Scan(&filterLinux.ID, &filterLinux.BuilderTypesID, &filterLinux.SSHUsername,
+		&filterLinux.VirtualizationType, &filterLinux.Name, &filterLinux.RootDeviceType,
 		&filterLinux.MostRecent, &filterLinux.Owners)
 }
 
 //UpdateAmiFilterLinux (PUT)
 func UpdateAmiFilterLinux(filterLinux *AmiFilterLinux) error {
 
-	_, err := db.Exec("UPDATE ami_filter_linux SET builder_types_id=?, friendly_name=?, description=?, "+
+	_, err := db.Exec("UPDATE ami_filter_linux SET builder_types_id=?,  "+
 		"ssh_username=?, virtualization_type=?, name=?, root_device_type=?, most_recent=?, owners=? WHERE id=?",
-		filterLinux.BuilderTypesID, filterLinux.FriendlyName, filterLinux.Description, filterLinux.SSHUsername,
+		filterLinux.BuilderTypesID, filterLinux.SSHUsername,
 		filterLinux.VirtualizationType, filterLinux.Name, filterLinux.RootDeviceType, filterLinux.MostRecent,
 		filterLinux.Owners, filterLinux.ID)
 

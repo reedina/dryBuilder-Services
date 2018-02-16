@@ -80,10 +80,10 @@ func GetAmiFilterLinux(w http.ResponseWriter, r *http.Request) {
 //GetAmiFilterLinuxByName (GET)
 func GetAmiFilterLinuxByName(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	friendlyName := vars["name"]
+	name := vars["name"]
 
 	filterLinux := model.AmiFilterLinux{}
-	filterLinux.FriendlyName = friendlyName
+	filterLinux.Name = name
 
 	if err := model.GetAmiFilterLinuxByName(&filterLinux); err != nil {
 		switch err {
@@ -122,9 +122,10 @@ func UpdateAmiFilterLinux(w http.ResponseWriter, r *http.Request) {
 		respondWithError(w, http.StatusBadRequest, "AMI Filter Linux ID does not exist")
 		return
 	}
+
 	// Does Instance Type Name exists for another ID
-	if model.DoesAmiFilterLinuxExistForAnotherID(filterLinux.FriendlyName, filterLinux.ID) == true {
-		respondWithError(w, http.StatusBadRequest, "AMI Filter Linux Exists for another AMI Filter Linux ID")
+	if model.DoesAmiFilterLinuxExistForAnotherID(filterLinux.Name, filterLinux.ID) == true {
+		respondWithError(w, http.StatusConflict, "AMI Filter Linux Exists for another AMI Filter Linux ID")
 		return
 	}
 
