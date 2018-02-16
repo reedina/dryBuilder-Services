@@ -14,7 +14,7 @@ type AmiFilterLinux struct {
 	VirtualizationType string `json:"virtualization_type"`
 	Name               string `json:"name"`
 	RootDeviceType     string `json:"root_device_type"`
-	MostRecent         string `json:"most_recent"`
+	MostRecent         bool   `json:"most_recent"`
 	Owners             string `json:"owners"`
 }
 
