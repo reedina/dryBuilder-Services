@@ -68,6 +68,14 @@ func (a *App) InitializeRoutes() {
 	a.Router.HandleFunc("/api/packer/ami/filter/linux/{name}", ctrl.GetAmiFilterLinuxByName).Methods("GET")
 	a.Router.HandleFunc("/api/packer/ami/filter/linux/{id:[0-9]+}", ctrl.UpdateAmiFilterLinux).Methods("PUT")
 	a.Router.HandleFunc("/api/packer/ami/filter/linux/{id:[0-9]+}", ctrl.DeleteAmiFilterLinux).Methods("DELETE")
+
+	//model.AmiFilterLinux struct
+	a.Router.HandleFunc("/api/packer/builder/ebs", ctrl.CreateEbsBuilder).Methods("POST")
+	a.Router.HandleFunc("/api/packer/builder/ebses", ctrl.GetEbsBuilders).Methods("GET")
+	a.Router.HandleFunc("/api/packer/builder/ebs/{id:[0-9]+}", ctrl.GetEbsBuilder).Methods("GET")
+	a.Router.HandleFunc("/api/packer/builder/ebs/{name}", ctrl.GetEbsBuilderByName).Methods("GET")
+	a.Router.HandleFunc("/api/packer/builder/ebs/{id:[0-9]+}", ctrl.UpdateEbsBuilder).Methods("PUT")
+	a.Router.HandleFunc("/api/packer/builder/ebs/{id:[0-9]+}", ctrl.DeleteEbsBuilder).Methods("DELETE")
 }
 
 //RunApplication - Start the HTTP server
