@@ -14,6 +14,7 @@ type EbsBuilder struct {
 	AwsInstanceTypesID int    `json:"aws_instance_types_id"`
 	AwsAmiFilterID     int    `json:"aws_src_ami_filter_linux_id"`
 	SSHUsername        string `json:"ssh_username"`
+	AmiDescription     string `json:"ami_description"`
 }
 
 //DoesEbsBuilderResourceExist (POST)
@@ -63,8 +64,8 @@ func DoesEbsBuilderExistForAnotherID(builderName string, id int) bool {
 func CreateEbsBuilder(ebs *EbsBuilder) error {
 
 	res, err := db.Exec("INSERT INTO ebs_builders(builder_name, ami_name, aws_auth_id, aws_regions_id, aws_instance_types_id,"+
-		"aws_src_ami_filter_linux_id, ssh_username) VALUES(?,?,?,?,?,?,?)",
-		ebs.BuilderName, ebs.AmiName, ebs.AwsAuthID, ebs.AwsRegionsID, ebs.AwsInstanceTypesID, ebs.AwsAmiFilterID, ebs.SSHUsername)
+		"aws_src_ami_filter_linux_id, ssh_username, ami_description) VALUES(?,?,?,?,?,?,?,?)",
+		ebs.BuilderName, ebs.AmiName, ebs.AwsAuthID, ebs.AwsRegionsID, ebs.AwsInstanceTypesID, ebs.AwsAmiFilterID, ebs.SSHUsername, ebs.AmiDescription)
 
 	if err != nil {
 		return err
@@ -79,7 +80,7 @@ func CreateEbsBuilder(ebs *EbsBuilder) error {
 //GetEbsBuilders (GET)
 func GetEbsBuilders() ([]EbsBuilder, error) {
 	rows, err := db.Query("SELECT id, builder_name, ami_name, aws_auth_id, aws_regions_id, aws_instance_types_id," +
-		" aws_src_ami_filter_linux_id, ssh_username FROM ebs_builders")
+		" aws_src_ami_filter_linux_id, ssh_username, ami_description FROM ebs_builders")
 
 	if err != nil {
 		return nil, err
@@ -92,7 +93,7 @@ func GetEbsBuilders() ([]EbsBuilder, error) {
 
 		var r EbsBuilder
 		if err := rows.Scan(&r.ID, &r.BuilderName, &r.AmiName, &r.AwsAuthID, &r.AwsRegionsID, &r.AwsInstanceTypesID,
-			&r.AwsAmiFilterID, &r.SSHUsername); err != nil {
+			&r.AwsAmiFilterID, &r.SSHUsername, &r.AmiDescription); err != nil {
 			return nil, err
 		}
 		ebsBuilders = append(ebsBuilders, r)
@@ -104,25 +105,26 @@ func GetEbsBuilders() ([]EbsBuilder, error) {
 //GetEbsBuilder (GET)
 func GetEbsBuilder(ebs *EbsBuilder) error {
 	return db.QueryRow("SELECT id, builder_name, ami_name, aws_auth_id, aws_regions_id, aws_instance_types_id, "+
-		"aws_src_ami_filter_linux_id,ssh_username FROM ebs_builders WHERE id=?", ebs.ID).
-		Scan(&ebs.ID, &ebs.BuilderName, &ebs.AmiName, &ebs.AwsAuthID, &ebs.AwsRegionsID, &ebs.AwsInstanceTypesID, &ebs.AwsAmiFilterID, &ebs.SSHUsername)
+		"aws_src_ami_filter_linux_id,ssh_username, ami_description FROM ebs_builders WHERE id=?", ebs.ID).
+		Scan(&ebs.ID, &ebs.BuilderName, &ebs.AmiName, &ebs.AwsAuthID, &ebs.AwsRegionsID, &ebs.AwsInstanceTypesID, &ebs.AwsAmiFilterID,
+			&ebs.SSHUsername, &ebs.AmiDescription)
 }
 
 //GetEbsBuilderByName (GET)
 func GetEbsBuilderByName(ebs *EbsBuilder) error {
 	return db.QueryRow("SELECT id, builder_name, ami_name, aws_auth_id, aws_regions_id, aws_instance_types_id, "+
-		"aws_src_ami_filter_linux_id, ssh_username from ebs_builders where account_name=?",
+		"aws_src_ami_filter_linux_id, ssh_username, ami_description from ebs_builders where account_name=?",
 		ebs.BuilderName).Scan(&ebs.ID, &ebs.BuilderName, &ebs.AmiName, &ebs.AwsAuthID, &ebs.AwsRegionsID, &ebs.AwsInstanceTypesID,
-		&ebs.AwsAmiFilterID, &ebs.SSHUsername)
+		&ebs.AwsAmiFilterID, &ebs.SSHUsername, &ebs.AmiDescription)
 }
 
 //UpdateEbsBuilder (PUT)
 func UpdateEbsBuilder(ebs *EbsBuilder) error {
 	_, err :=
 		db.Exec("UPDATE ebs_builders SET builder_name=?, ami_name=?, aws_auth_id=?, aws_regions_id=?,"+
-			" aws_instance_types_id=?, aws_src_ami_filter_linux_id=?, ssh_username=? WHERE id=?",
+			" aws_instance_types_id=?, aws_src_ami_filter_linux_id=?, ssh_username=?, ami_description=? WHERE id=?",
 			ebs.BuilderName, ebs.AmiName, ebs.AwsAuthID, ebs.AwsRegionsID, ebs.AwsInstanceTypesID, ebs.AwsAmiFilterID,
-			ebs.SSHUsername, ebs.ID)
+			ebs.SSHUsername, ebs.AmiDescription, ebs.ID)
 
 	return err
 }
