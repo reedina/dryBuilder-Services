@@ -76,6 +76,15 @@ func (a *App) InitializeRoutes() {
 	a.Router.HandleFunc("/api/packer/builder/ebs/{name}", ctrl.GetEbsBuilderByName).Methods("GET")
 	a.Router.HandleFunc("/api/packer/builder/ebs/{id:[0-9]+}", ctrl.UpdateEbsBuilder).Methods("PUT")
 	a.Router.HandleFunc("/api/packer/builder/ebs/{id:[0-9]+}", ctrl.DeleteEbsBuilder).Methods("DELETE")
+
+	//model.UserDataFile struct
+	a.Router.HandleFunc("/api/packer/builder/userDataFile", ctrl.CreateUserDataFile).Methods("POST")
+	a.Router.HandleFunc("/api/packer/builder/userDataFiles", ctrl.GetUserDataFiles).Methods("GET")
+	a.Router.HandleFunc("/api/packer/builder/userDataFile/{id:[0-9]+}", ctrl.GetUserDataFile).Methods("GET")
+	a.Router.HandleFunc("/api/packer/builder/userDataFile/{name}", ctrl.GetUserDataFileByName).Methods("GET")
+	a.Router.HandleFunc("/api/packer/builder/userDataFile/{id:[0-9]+}", ctrl.UpdateUserDataFile).Methods("PUT")
+	a.Router.HandleFunc("/api/packer/builder/userDataFile/{id:[0-9]+}", ctrl.DeleteUserDataFile).Methods("DELETE")
+
 }
 
 //RunApplication - Start the HTTP server
