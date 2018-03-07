@@ -10,7 +10,7 @@ type UserDataFile struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
 	SourceCode  string `json:"source_code"`
-	Tags        string `json:"tag"`
+	Tags        string `json:"tags"`
 }
 
 //UserDataFiles (TYPE)
